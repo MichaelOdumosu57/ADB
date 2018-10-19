@@ -1,0 +1,37 @@
+# 
+# udev rules file
+# mtp  remove
+#
+
+############################################################################
+ACTION!="remove", GOTO="mtp_remove_end"
+############################################################################
+
+############################################################################
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0244", RUN+="/usr/bin/mtpfs-smart.sh remove" 
+    
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0245", RUN+="/usr/bin/mtpfs-smart.sh remove" 
+
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0246", RUN+="/usr/bin/mtpfs-smart.sh remove" 
+
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0247", RUN+="/usr/bin/mtpfs-smart.sh remove" 
+#u950 u985
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0287", RUN+="/usr/bin/mtpfs-smart.sh remove" 
+#n9500 n9100 n861
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0279", RUN+="/usr/bin/mtpfs-smart.sh remove" 
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0216", RUN+="/usr/bin/mtpfs-smart.sh remove" 
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0306", RUN+="/usr/bin/mtpfs-smart.sh remove"
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0307", RUN+="/usr/bin/mtpfs-smart.sh remove"
+#v985
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0343", RUN+="/usr/bin/mtpfs-smart.sh remove"
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0418", RUN+="/usr/bin/mtpfs-smart.sh remove"
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0321", RUN+="/usr/bin/mtpfs-smart.sh remove"
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0322", RUN+="/usr/bin/mtpfs-smart.sh remove"
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0248", RUN+="/usr/bin/mtpfs-smart.sh remove"
+############################################################################
+SUBSYSTEM=="usb", ENV{ID_VENDOR_ID}=="19d2", ENV{ID_MODEL_ID}=="0501", RUN+="/usr/bin/mtpfs-smart.sh remove"
+
+
+############################################################################
+LABEL="mtp_remove_end"
+############################################################################

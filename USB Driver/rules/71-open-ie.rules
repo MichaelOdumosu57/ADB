@@ -1,0 +1,13 @@
+# wait for the ecm device get IP address and open IE sunjianwei add 
+# See udev(7) for syntax.
+
+
+ACTION!="add", GOTO="startnetwork_add_end"
+
+
+#########################################################
+SUBSYSTEM=="net", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0349", RUN+="/usr/bin/startnetwork.sh"
+#########################################################
+
+
+LABEL="startnetwork_add_end"

@@ -1,0 +1,24 @@
+https://developer.android.com/studio/command-line/adb
+
+
+adb checks if a server process is running if not then it starts one
+all adb clients use port 5037 for adb server
+the server sets up connections to all running devices known i believe as emulators and they use pairs, even ports for console and odd for 3adb
+you can control your computer from a phone and likewise
+when you connect a device greater than android ver 4.2.2 it ask for RSA for security
+
+
+Connect to a device over Wi-Fi
+
+  1. Connect your Android device and adb host computer to a common Wi-Fi network accessible to both.
+   Beware that not all access points are suitable; you might need to use an access point whose firewall
+   is configured properly to support adb
+
+  2. If you are connecting to an Wear OS device, turn off Bluetooth on the phone that's paired with the device
+
+  3. Connect the device to the host computer with a USB cable
+
+  4. Set the target device to listen for a TCP/IP connection on port 5555
+      adb tcpip 5555
+
+  5. Disconnect the USB cable from the target device    

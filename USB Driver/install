@@ -1,0 +1,246 @@
+#!/bin/bash
+
+echo "*** Check for root ***"
+if [ $EUID -ne 0 ]; then
+	echo -e "\b\b\b - failed"
+	echo "*** Please retry as root user."
+        read -p "press any key to exit... " -n 1
+	exit -1
+fi
+
+#####################################################################
+ZTE_HANDSET_RULES="61-usb-cdrom.rules"
+ZTE_ANDROID_RULES="51-android-hs.rules"
+ZTE_MTPADD_RULES="51-mtpfs-add.rules"
+ZTE_MTPREMOVE_RULES="51-mtpfs-remove.rules"
+ZTE_LIBMTP_RULES="39-libmtp-smart.rules"
+
+ZTE_LIB_ID3TAG="libid3tag.so.0"
+ZTE_LIB_ID3TAG1="libid3tag.so"
+ZTE_LIB_ID3TAG2="libid3tag.so.0.3.0"
+
+ZTE_LIB_MAD="libmad.so.0"
+ZTE_LIB_MAD1="libmad.so.0.2.1"
+
+ZTE_LIB_MTP="libmtp.so.9"
+ZTE_LIB_MTP1="libmtp.so"
+ZTE_LIB_MTP2="libmtp.so.9.3.0"
+
+ZTE_LIB_USB="libusb.so"
+ZTE_LIB_USB1="libusb-0.1.so.4"
+ZTE_LIB_USB2="libusb-0.1.so.4.4.4"
+ZTE_LIB_USB3="libusb-1.0.so"
+ZTE_LIB_USB4="libusb-1.0.so.0"
+ZTE_LIB_USB5="libusb-1.0.so.0.1.0"
+ZTE_LIB_USB6="libusbg.so"
+ZTE_LIB_USB7="libusbg.so.0"
+ZTE_LIB_USB8="libusbg.so.0.0.1"
+ZTE_LIB_USB9="libusbmuxd.so"
+ZTE_LIB_USB10="libusbmuxd.so.2"
+ZTE_LIB_USB11="libusbmuxd.so.2.1.0"
+ZTE_LIB_USB12="libusbredirhost.so.1"
+ZTE_LIB_USB13="libusbredirhost.so.1.0.0"
+ZTE_LIB_USB14="libusbredirparser.so.1"
+ZTE_LIB_USB15="libusbredirparser.so.1.0.0"
+
+
+ZTE_MTP_DETECT="mtp-detect"
+ZTE_MTP_CONNECT="mtp-connect"
+ZTE_MTPFS_SHELL="mtpfs-smart.sh"
+
+ZTE_MTPDAEMON="mtpdaemon"
+ZTE_MTPCLIENT="mtpclient"
+ZTE_MTPDAEMON_SHELL="mtpdaemon.sh"
+ZTE_U_MTPDAEMON_SHELL="umtpdaemon.sh"
+DEV_CDROM_NAME=""
+
+ZTE_HANDSET_DRIVER="./driver/ZTE_driver_install*.run"
+ZTE_DRIVER_KO="/lib/modules/`uname -r`/kernel/drivers/usb/serial/zte.ko"
+#####################################################################
+
+echo "USB driver install..."
+
+#####################################################################
+chmod +x $ZTE_HANDSET_DRIVER
+#pfzheng in 2015.2.27
+for driver in $ZTE_HANDSET_DRIVER
+do
+   sudo $driver
+done
+#./$ZTE_HANDSET_DRIVER
+#####################################################################
+
+
+sudo cp -f ./bin/adb                       /usr/bin/
+
+if [ -f  "/usr/bin/simple-mtpfs" ]; then
+	echo "mtpfs exist..."
+else
+	sudo cp -f ./mtp/simple-mtpfs                     /usr/bin/
+fi
+
+if [ -f  "/usr/bin/$ZTE_MTP_DETECT" ]; then
+	echo "$ZTE_MTP_DETECT  exist..."
+else
+	sudo cp -f ./mtp/$ZTE_MTP_DETECT           /usr/bin/
+fi
+
+if [ -f  "/usr/bin/$ZTE_MTP_CONNECT" ]; then
+	echo "$ZTE_MTP_CONNECT  exist..."
+else
+	sudo cp -f ./mtp/$ZTE_MTP_CONNECT          /usr/bin/
+fi
+
+if [ -f  "/usr/bin/$ZTE_MTPFS_SHELL" ]; then
+	echo "$ZTE_MTPFS_SHELL exist..."
+else
+	sudo cp -f ./mtp/$ZTE_MTPFS_SHELL          /usr/bin/
+fi
+##2015 9 1
+if [ -f  "/usr/bin/$ZTE_MTPDAEMON" ]; then
+        echo "$ZTE_MTPDAEMON exist..."
+else
+        sudo cp -f ./mtp/$ZTE_MTPDAEMON          /usr/bin/
+fi
+
+if [ -f  "/usr/bin/$ZTE_MTPDAEMON_SHELL" ]; then
+        echo "$ZTE_MTPDAEMON_SHELL exist..."
+else
+        sudo cp -f ./mtp/$ZTE_MTPDAEMON_SHELL          /etc/rc.d/init.d/
+        sudo cp -f ./mtp/$ZTE_U_MTPDAEMON_SHELL          /etc/init.d/
+fi
+
+if [ -f  "/usr/bin/$ZTE_MTPCLIENT" ]; then
+        echo "$ZTE_MTPCLIENT exist..."
+else
+        sudo cp -f ./mtp/$ZTE_MTPCLIENT         /usr/bin/
+fi
+###
+
+
+sudo chmod a+x /usr/bin/adb
+sudo chmod a+x /usr/bin/mtpfs
+sudo chmod a+x /usr/bin/$ZTE_MTP_DETECT
+sudo chmod a+x /usr/bin/$ZTE_MTP_CONNECT
+sudo chmod a+x /usr/bin/$ZTE_MTPFS_SHELL
+#######2015 9 1
+sudo chmod a+x /etc/rc.d/init.d/$ZTE_MTPDAEMON_SHELL
+sudo chmod a+x /etc/init.d/$ZTE_U_MTPDAEMON_SHELL
+sudo chmod 755 /usr/bin/$ZTE_MTPDAEMON
+sudo chmod a+x /usr/bin/$ZTE_MTPCLIENT
+
+chkconfig --add /etc/rc.d/init.d/$ZTE_MTPDAEMON_SHELL
+service  mtpdaemon start &
+
+#update-rc.d umtpdaemon.sh start 75 2 3 4 5 S . stop 25 0 1 6 .
+ln -s /etc/init.d/umtpdaemon.sh /etc/rc2.d/S75umtpdaemon.sh
+service umtpdaemon.sh start &
+
+##
+#sudo /usr/bin/mtpdaemon&
+
+ 
+#pf zheng 2015.7.24
+sudo cp -f ./mtp/$ZTE_LIB_ID3TAG /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_ID3TAG1 /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_ID3TAG2 /usr/lib/
+
+
+sudo cp -f ./mtp/$ZTE_LIB_MAD    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_MAD1    /usr/lib/
+
+sudo cp -f ./mtp/$ZTE_LIB_MTP    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_MTP1   /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_MTP2   /usr/lib/
+
+sudo cp -f ./mtp/$ZTE_LIB_USB    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB1    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB2    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB3    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB4    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB5    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB6    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB7    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB8    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB9    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB10    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB11    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB12    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB13    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB14    /usr/lib/
+sudo cp -f ./mtp/$ZTE_LIB_USB15    /usr/lib/
+
+sudo cp -f ./rules/$ZTE_HANDSET_RULES      /etc/udev/rules.d/
+sudo cp -f ./rules/$ZTE_ANDROID_RULES      /etc/udev/rules.d/
+sudo cp -f ./rules/$ZTE_MTPADD_RULES       /etc/udev/rules.d/
+sudo cp -f ./rules/$ZTE_MTPREMOVE_RULES    /etc/udev/rules.d/
+sudo cp -f ./rules/$ZTE_LIBMTP_RULES       /etc/udev/rules.d/
+####
+
+sudo chmod a+x /etc/udev/rules.d/$ZTE_HANDSET_RULES
+sudo chmod a+x /etc/udev/rules.d/$ZTE_ANDROID_RULES
+sudo chmod a+x /etc/udev/rules.d/$ZTE_MTPFS_RULES
+sudo chmod a+x /etc/udev/rules.d/$ZTE_LIBMTP_RULES
+
+
+line_num=`ls /dev/libmtp* 2>/dev/null | wc -l`
+if [ $line_num -ne 0 ]; then
+   echo "exe mtpfs-smart.sh"
+   /bin/sh /usr/bin/mtpfs-smart.sh add
+fi
+
+if [ -d "/opt/linux_driver_uninstall" ]
+then
+	echo "rm old linux_driver_uninstall"
+	sudo rm -r /opt/linux_driver_uninstall/
+fi
+
+sudo mkdir /opt/linux_driver_uninstall/
+sudo chmod -R 777 /opt/linux_driver_uninstall/
+sudo cp -f ./readme.txt  /opt/linux_driver_uninstall/
+sudo chmod +x /opt/linux_driver_uninstall/readme.txt
+sudo cp -f ./uninstall      /opt/linux_driver_uninstall/
+sudo chmod +x /opt/linux_driver_uninstall/uninstall
+sudo mkdir /opt/linux_driver_uninstall/driver/
+sudo cp -f $ZTE_HANDSET_DRIVER     /opt/linux_driver_uninstall/driver/
+sudo chmod +x /opt/linux_driver_uninstall/driver/ZTE_driver_install*.run
+
+#####################################################################
+#for file in `ls /dev/sr[0-9]`
+#do
+#	DEV_CDROM_NAME="$file"
+#done
+#
+#echo "eject cdrom: $DEV_CDROM_NAME"
+#
+#/usr/bin/eject  "$DEV_CDROM_NAME" 2>/dev/null 
+#/bin/eject      "$DEV_CDROM_NAME" 2>/dev/null
+#####################################################################
+
+
+################################################################################
+#if [ -s "$ZTE_DRIVER_KO" -a -s "/etc/udev/rules.d/$ZTE_HANDSET_RULES" ]
+if [ -s "/etc/udev/rules.d/$ZTE_MTPADD_RULES" -a -s "/usr/bin/adb" -a -s "/etc/udev/rules.d/$ZTE_MTPREMOVE_RULES" \
+-a -s "/usr/bin/$ZTE_MTPFS_SHELL" ]
+then
+	echo "**********************************************"
+	echo "USB driver install successful"
+	echo "**********************************************"
+else
+	echo "**********************************************"
+	echo "USB driver install failed"
+	echo "**********************************************"
+fi
+
+################################################################################
+
+
+################################################################################
+# create the desktop link
+#source common
+#cp "$icon_name.png" /usr/share/icons/
+#cp "$app_name.desktop" $(xdg-user-dir DESKTOP)
+#cd $(xdg-user-dir DESKTOP)
+#chmod 777 "$app_name.desktop"
+#echo "Create the desktop link Successfully!"
+################################################################################

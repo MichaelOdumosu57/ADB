@@ -1,0 +1,35 @@
+# UDEV-style hotplug map for libmtp
+# Put this file in /etc/udev/rules.d
+
+ACTION!="add", GOTO="libmtp_rules_end"
+ENV{MAJOR}!="?*", GOTO="libmtp_rules_end"
+SUBSYSTEM=="usb", GOTO="libmtp_usb_rules"
+GOTO="libmtp_rules_end"
+
+LABEL="libmtp_usb_rules"
+
+
+# ZTE Tablet USB Drvier v55 
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0244", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0245", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0246", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0247", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+#u950 u985
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0287", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+#n9500 n9100 n861
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0216", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0279", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0306", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0307", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+#V985
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0343", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0418", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0321", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0322", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+
+ATTR{idVendor}=="19d2", ATTR{idProduct}=="0248", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+TTR{idVendor}=="19d2",  ATTR{idProduct}=="0501", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+# Autoprobe vendor-specific, communication and PTP devices
+ENV{ID_MTP_DEVICE}!="1", ATTR{bDeviceClass}=="00|02|06|ef|ff", PROGRAM="mtp-probe /sys$env{DEVPATH} $attr{busnum} $attr{devnum}", RESULT=="1", SYMLINK+="libmtp-%k", ENV{ID_MTP_DEVICE}="1", ENV{ID_MEDIA_PLAYER}="1"
+
+LABEL="libmtp_rules_end"

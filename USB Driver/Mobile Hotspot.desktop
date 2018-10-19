@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Name=Mobile Hotspot
+GenericName=Internet
+Comment=Open the link
+Exec=xdg-open http://mobile.hotspot
+Icon=4g
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Internet

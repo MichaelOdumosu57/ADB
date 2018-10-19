@@ -1,0 +1,7 @@
+# This file maintains persistent names for CD/DVD reader and writer devices.
+# See udev(7) for syntax.
+
+############################################################################
+SUBSYSTEM=="block", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0083", SYMLINK+="ZTECdrom", \
+RUN+="/usr/bin/eject /dev/ZTECdrom", RUN+="/bin/eject /dev/ZTECdrom"
+############################################################################

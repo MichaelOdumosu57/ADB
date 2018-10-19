@@ -1,0 +1,41 @@
+# 
+# udev rules file
+# mtp  add
+#
+
+############################################################################
+ACTION!="add", GOTO="mtp_add_end"
+############################################################################
+
+
+############################################################################
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0244", RUN+="/usr/bin/mtpfs-smart.sh add"   
+
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0245", RUN+="/usr/bin/mtpfs-smart.sh add"   
+
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0246", RUN+="/usr/bin/mtpfs-smart.sh add"   
+
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0247", RUN+="/usr/bin/mtpfs-smart.sh add"   
+#u950 u985
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0287", RUN+="/usr/bin/mtpfs-smart.sh add"  
+#n9500 n9100 n861
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0279", RUN+="/usr/bin/mtpfs-smart.sh add"  
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0216", RUN+="/usr/bin/mtpfs-smart.sh add"  
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0306", RUN+="/usr/bin/mtpfs-smart.sh add"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0307", RUN+="/usr/bin/mtpfs-smart.sh add"
+#V985
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0343", RUN+="/usr/bin/mtpfs-smart.sh add"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0418", RUN+="/usr/bin/mtpfs-smart.sh add"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0321", RUN+="/usr/bin/mtpfs-smart.sh add"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0322", RUN+="/usr/bin/mtpfs-smart.sh add"
+
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0248", RUN+="/usr/bin/mtpfs-smart.sh add"	
+SUBSYSTEM=="usb", ATTRS{idVendor}=="19d2", ATTRS{idProduct}=="0501", RUN+="/usr/bin/mtpfs-smart.sh add"
+############################################################################
+	
+
+
+
+############################################################################
+LABEL="mtp_add_end"
+############################################################################
