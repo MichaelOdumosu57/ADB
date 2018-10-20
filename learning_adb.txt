@@ -3,9 +3,10 @@ https://developer.android.com/studio/command-line/adb
 
 adb checks if a server process is running if not then it starts one
 all adb clients use port 5037 for adb server
-the server sets up connections to all running devices known i believe as emulators and they use pairs, even ports for console and odd for 3adb
+the server sets up connections to all running devices  and they use pairs, even ports for console and odd for 3adb
 you can control your computer from a phone and likewise
 when you connect a device greater than android ver 4.2.2 it ask for RSA for security
+Whats an emulator
 
 
 Connect to a device over Wi-Fi
@@ -21,4 +22,154 @@ Connect to a device over Wi-Fi
   4. Set the target device to listen for a TCP/IP connection on port 5555
       adb tcpip 5555
 
-  5. Disconnect the USB cable from the target device    
+  5. Disconnect the USB cable from the target device
+
+  6.Find the IP address of the Android device.
+
+  7. Connect to the device by its IP address.
+          adb connect [device_ip_address]
+          adb connect 192.168.1.8
+
+  8.Confirm that your host computer is connected to the target device:
+  adb devices
+    List of devices attached
+    [device_ip_address] :5555 device
+
+  9. the adb connection is ever lost: or refuses to connect
+      turn off usb debugging then turn it back on again
+      or restart things till something works
+
+
+
+Query for devices
+
+          important to know what device is connected to the adb server
+          adb devices -l
+              Serial number: A string created by adb to uniquely identify the device by its port number.
+                  ex: emulator-5554
+              State: The connection state
+                  offine: connected to the computer but not the servers
+                  device: watch the device may not be fully booted
+                  no device: there is no device connected
+
+
+      Emulator not listed
+          adb devices has a corner case command where you cannot see emulators this happens when
+          the adb server is not running and
+          you use the emulator commannd with the -port || ports oprtion with an odd-numbered port between 5554 5584 and
+          you start the server after starting the emulator  and
+          the odd port chosen is not busy so the port Connection is made or the port is busy so it chooses an even port
+
+        to avoid This
+          let the emulator choose its own ports
+          dont run more than 16 emulators
+          start the adb server beforehand
+
+Example 1:
+here the adb device command starts the server but no devices are found
+for avd proivde a valid one from your system by using emulator -list-avds
+emulator command is in the android_sdk/tools directory
+
+
+
+
+      $ adb kill-server
+      $ emulator -avd [Nexus_6_API_25] -port 5555
+      $ adb devices
+
+      List of devices attached
+      * daemon not running. starting it now on port 5037 *
+      * daemon started successfully *
+
+
+        Example 2
+
+        $ adb kill-server
+        $ emulator -avd Nexus_6_API_25 -port 5557
+        $ adb start-server
+        $ adb devices
+
+        List of devices attached
+        emulator-5557 device
+
+
+Send commands to a specific device
+
+  to choose a specific device
+
+
+  $ adb devices
+  List of devices attached
+  emulator-5554 device
+  emulator-5555 device
+
+  $ adb -s emulator-5555 install helloWorld.apk
+
+
+  if there are multiple targets but you do not specify adb generates an error
+
+Install an app
+
+
+    adb install path_to_apk
+    to test use the -t flag
+
+Set up port forwarding
+
+    sets up forwarding of host port 6100 to device port 7100:
+    adb forward tcp:6100 tcp:7100
+
+    adb forward tcp:6100 local:logd
+
+
+Copy files to/from a device
+
+    To copy a file or directory and its sub-directories from the device, do the following:
+      adb pull remote local
+
+    To copy a file or directory and its sub-directories to the device, do the following:
+      adb push local remote
+
+
+Stop the adb server
+
+    sometimes you might need to do this when adb does not respond to a command
+
+adb commands reference
+
+      adb [-d | -e | -s serial_number] command
+
+
+      -s: Install the app on the SD card.
+      -d: Allow version code downgrade (debugging packages only).
+      -g: Grant all runtime permissions.
+
+
+Global options	                    Description
+-a	                                Listen on all network interfaces instead of only on localhost.
+
+-d	                                Direct an adb command to the only attached USB device.
+                                    Returns an error when more than one USB device is attached.
+
+-e	                                Direct an adb command to the only running emulator.
+                                    Returns an error when more than one emulator is running.
+
+-s                                  serial_number	Direct an adb command to a specific device,
+                                    referred to by its adb-assigned serial number (such as emulator-5556).
+                                    Overrides the serial number value stored in the $ANDROID_SERIAL environment variable.
+                                    See Send Commands to a Specific Device.
+
+-H [server]	                        The name of the adb server host. The default value is localhost.
+
+-P [port]	                          The adb server port number. The default value is 5037.
+
+-L [socket]                        	Listen on the provided adb server socket. The default value is tcp:localhost:5037.
+
+                        
+
+
+
+
+
+
+s
